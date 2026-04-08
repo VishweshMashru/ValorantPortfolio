@@ -46,32 +46,24 @@ function useTypewriter(texts: string[], speed = 75, pause = 1600) {
   return display
 }
 
+
+// ── mobile detection ─────────────────────────────────────────────────────────
+function useIsMobile() {
+  const [mobile, setMobile] = useState(false)
+  useEffect(() => {
+    const check = () => setMobile(window.innerWidth < 768)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
+  }, [])
+  return mobile
+}
 // ── data ──────────────────────────────────────────────────────────────────────
 const ABILITIES = [
-  {
-    key: 'C',
-    name: 'BINDING VOW',
-    type: 'BASIC',
-    desc: 'Equip a contract. FIRE to bind a target location — any enemy entering the zone takes a small damage tick and gets revealed to your team for 4 seconds. Two charges.',
-  },
-  {
-    key: 'Q',
-    name: 'CURSED THREAD',
-    type: 'SIGNATURE',
-    desc: 'FIRE to launch a tethered projectile that pierces terrain. On impact, the thread pulls enemies within 6m toward the anchor point and briefly slows them. No charge cost.',
-  },
-  {
-    key: 'E',
-    name: 'HOLLOW PURPLE',
-    type: 'BASIC',
-    desc: 'CHARGE then FIRE to release a compressed energy sphere that destroys all projectiles and utility in its path. Does not damage agents. Penetrates walls.',
-  },
-  {
-    key: 'X',
-    name: 'DOMAIN EXPANSION',
-    type: 'ULTIMATE',
-    desc: 'ACTIVATE to manifest a 12m radius domain. Enemies inside cannot use abilities for 6 seconds. Allies inside regenerate armor at 15hp/s. Costs 8 points.',
-  },
+  { key:'C', name:'EMBROID',     type:'BASIC',     desc:'Threads logic into physical fabric. Merges the family craft with technology. Passive — no other agent has it.' },
+  { key:'Q', name:'COMPILE',     type:'SIGNATURE', desc:'Full-stack deployment at extreme velocity. Leaves competitors with critical errors and zero test coverage.' },
+  { key:'E', name:'FREELANCE',   type:'BASIC',     desc:'Enters independent contract mode. Client acquisition in 3s. Penetrates any market. No cooldown.' },
+  { key:'X', name:'AKIRA DRIVE', type:'ULTIMATE',  desc:'Overclocks all systems. Reality becomes the canvas. Full creative chaos. 7 points.' },
 ]
 
 const LOADOUT = [
@@ -173,11 +165,11 @@ If you're a developer in a Tier 2 city feeling like you're missing out — you m
 ]
 
 const LORE = [
-  `Vishwesh Mashruwala. 23. CS grad from San Jose State, December 2025. Currently back in Surat helping run the family embroidery business while building my own thing on the side.`,
-  `I write code, break things, fix things. Full-stack mostly — Next.js, React, TypeScript. Also been getting into Unity and Blender. Game dev is the long-term thing.`,
-  `The embroidery work is genuinely interesting actually. Running inventory systems for it, learning how physical manufacturing works. It's just engineering with thread.`,
-  `Into hip-hop, basketball, lofi, anime. Pixel art occasionally. I like things that are made with taste, whatever the medium.`,
-  `Not looking to relocate right now. Available for freelance. Respond fast, ship faster.`,
+  `Born in Surat, Gujarat — a city of diamonds, textiles, and relentless commerce. Mashruwala grew up watching his father thread patterns into fabric with machine precision. He learned early that design is just engineering with better aesthetics.`,
+  `Recruited by VALORANT Protocol after demonstrating anomalous full-stack deployment capabilities during a freelance contract that should have taken three sprints. He shipped in four days. Investigators found evidence of extreme focus, three empty cups of chai, and a git history with exactly one commit message: "done."`,
+  `His signature ability, EMBROID, remains classified. Operatives report it involves weaving logic directly into physical matter — whether this is metaphor or literal remains under investigation.`,
+  `When not on contract, Mashruwala studies 3D art, plays basketball at unreasonable hours, and listens to hip-hop at volumes that concern his neighbors. Terminal history contains more anime references than mission logs.`,
+  `Current threat level: RADIANT. Current status: available for hire.`,
 ]
 
 const GALLERY = [
@@ -348,34 +340,71 @@ function IntroSequence({onDone}:{onDone:()=>void}){
 const PANELS = ['AGENT','LORE','BUILD','THOUGHTS','GALLERY','CONTACT']
 
 function Nav({panel,setPanel,thoughtId,setThoughtId}:{panel:string;setPanel:(p:string)=>void;thoughtId:string|null;setThoughtId:(id:string|null)=>void}){
+  const [menuOpen, setMenuOpen] = useState(false)
+  const go = (p:string) => { setPanel(p); setThoughtId(null); setMenuOpen(false) }
   return(
-    <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 py-3"
-      style={{background:`${B}CC`,backdropFilter:'blur(14px)',borderBottom:`1px solid ${DR}55`}}>
-      <div className="flex items-center gap-3 cursor-pointer" onClick={()=>{setPanel('AGENT');setThoughtId(null)}}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-          <path d="M2 2L12 22L14 16L8 8Z" fill={R}/>
-          <path d="M22 2L12 22L10 16L16 8Z" fill={W} opacity="0.9"/>
-        </svg>
-        <RGBSplit intensity={2}>
-          <span style={{fontFamily:'var(--font-mono)',fontSize:13,color:W,letterSpacing:'0.28em'}}>VISHWESH</span>
-        </RGBSplit>
+    <>
+      <div className="fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-4 py-3"
+        style={{background:`${B}CC`,backdropFilter:'blur(14px)',borderBottom:`1px solid ${DR}55`}}>
+        <div className="flex items-center gap-3 cursor-pointer" onClick={()=>go('AGENT')}>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+            <path d="M2 2L12 22L14 16L8 8Z" fill={R}/>
+            <path d="M22 2L12 22L10 16L16 8Z" fill={W} opacity="0.9"/>
+          </svg>
+          <RGBSplit intensity={2}>
+            <span style={{fontFamily:'var(--font-mono)',fontSize:12,color:W,letterSpacing:'0.28em'}}>VISHWESH</span>
+          </RGBSplit>
+        </div>
+        <div className="hidden md:flex gap-0.5">
+          {PANELS.map((p,i)=>(
+            <button key={p} onClick={()=>go(p)}
+              style={{fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.18em',padding:'7px 13px',
+                background:panel===p&&!thoughtId?R:'transparent',
+                color:panel===p&&!thoughtId?B:DIM,
+                border:panel===p&&!thoughtId?`1px solid ${R}`:`1px solid rgba(255,255,255,0.08)`,
+                clipPath:'polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)',cursor:'pointer',transition:'all 0.16s'}}>
+              <span style={{opacity:0.5,marginRight:3}}>{String(i+1).padStart(2,'0')}_</span>{p}
+            </button>
+          ))}
+        </div>
+        <div className="hidden md:block" style={{fontFamily:'var(--font-mono)',fontSize:11,color:`${R}88`,letterSpacing:'0.2em'}}>SURAT // IND</div>
+        <button className="md:hidden flex flex-col justify-center gap-1.5 p-1"
+          onClick={()=>setMenuOpen(o=>!o)}
+          style={{background:'transparent',border:'none',cursor:'pointer',width:32,height:32}}>
+          <motion.div animate={{rotate:menuOpen?45:0,y:menuOpen?8:0}} transition={{duration:0.2}}
+            style={{width:22,height:2,background:R,borderRadius:1}}/>
+          <motion.div animate={{opacity:menuOpen?0:1}} transition={{duration:0.2}}
+            style={{width:22,height:2,background:R,borderRadius:1}}/>
+          <motion.div animate={{rotate:menuOpen?-45:0,y:menuOpen?-8:0}} transition={{duration:0.2}}
+            style={{width:22,height:2,background:R,borderRadius:1}}/>
+        </button>
       </div>
-      <div className="flex gap-0.5">
-        {PANELS.map((p,i)=>(
-          <button key={p} onClick={()=>{setPanel(p);setThoughtId(null)}}
-            style={{fontFamily:'var(--font-mono)',fontSize:11,letterSpacing:'0.18em',padding:'7px 14px',
-              background:panel===p&&!thoughtId?R:'transparent',
-              color:panel===p&&!thoughtId?B:DIM,
-              border:panel===p&&!thoughtId?`1px solid ${R}`:`1px solid rgba(255,255,255,0.08)`,
-              clipPath:'polygon(6px 0%,100% 0%,calc(100% - 6px) 100%,0% 100%)',cursor:'pointer',transition:'all 0.16s'}}>
-            <span style={{opacity:0.5,marginRight:3}}>{String(i+1).padStart(2,'0')}_</span>{p}
-          </button>
-        ))}
-      </div>
-      <div style={{fontFamily:'var(--font-mono)',fontSize:11,color:`${R}88`,letterSpacing:'0.2em'}}>SURAT // IND</div>
-    </div>
+      <AnimatePresence>
+        {menuOpen&&(
+          <motion.div initial={{opacity:0,y:-8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-8}}
+            transition={{duration:0.2}}
+            className="fixed left-0 right-0 z-40 md:hidden"
+            style={{top:52,background:`${B}F8`,backdropFilter:'blur(14px)',borderBottom:`1px solid ${DR}55`}}>
+            {PANELS.map((p,i)=>(
+              <button key={p} onClick={()=>go(p)}
+                className="w-full text-left flex items-center gap-3 px-5 py-4"
+                style={{background:panel===p&&!thoughtId?`${R}18`:'transparent',
+                  borderBottom:`1px solid ${DR}33`,
+                  fontFamily:'var(--font-mono)',fontSize:13,letterSpacing:'0.2em',
+                  color:panel===p&&!thoughtId?R:DIM,cursor:'pointer',border:'none',
+                  borderBottomColor:`${DR}33`,borderBottomWidth:1,borderBottomStyle:'solid' as const}}>
+                <span style={{color:R,opacity:0.5,fontSize:11}}>{String(i+1).padStart(2,'0')}_</span>
+                {p}
+                {panel===p&&!thoughtId&&<div className="ml-auto w-1.5 h-1.5 rounded-full" style={{background:R}}/>}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   )
 }
+
 
 // ── WIDGETS ───────────────────────────────────────────────────────────────────
 function Terminal(){
@@ -580,25 +609,121 @@ function AbilityCallout({ab}:{ab:typeof ABILITIES[0]|null}){
 // ── AGENT PANEL ───────────────────────────────────────────────────────────────
 function AgentPanel(){
   const [ab,setAb]=useState<number|null>(null)
+  const isMobile = useIsMobile()
   const {x,y}=useParallax()
-  const bgX=useTransform(x,v=>v*-22),bgY=useTransform(y,v=>v*-14)
-  const artX=useTransform(x,v=>v*-8),artY=useTransform(y,v=>v*-5)
-  const wLX=useTransform(x,v=>v*14),wLY=useTransform(y,v=>v*10)
-  const wRX=useTransform(x,v=>v*18),wRY=useTransform(y,v=>v*12)
-  const dX=useTransform(x,v=>v*26),dY=useTransform(y,v=>v*18)
+  const bgX=useTransform(x,v=>isMobile?0:v*-22),bgY=useTransform(y,v=>isMobile?0:v*-14)
+  const artX=useTransform(x,v=>isMobile?0:v*-8),artY=useTransform(y,v=>isMobile?0:v*-5)
+  const wLX=useTransform(x,v=>isMobile?0:v*14),wLY=useTransform(y,v=>isMobile?0:v*10)
+  const wRX=useTransform(x,v=>isMobile?0:v*18),wRY=useTransform(y,v=>isMobile?0:v*12)
   const activeAb=ab!==null?ABILITIES[ab]:null
   const typed=useTypewriter(['CREATIVE DEVELOPER','FREELANCER','FULL-STACK ENG.','GAME DEV','3D ARTIST (learning)'])
+
+  // ── MOBILE LAYOUT ──────────────────────────────────────────────────────────
+  if(isMobile){
+    return(
+      <div className="relative w-full overflow-y-auto" style={{minHeight:'100svh',paddingTop:52}}>
+        {/* Agent art as full-screen bg */}
+        <div className="fixed inset-0 z-0 pointer-events-none">
+          <img src="/agent-art.png" alt="Agent"
+            style={{position:'absolute',bottom:0,left:'50%',transform:'translateX(-50%)',
+              height:'85vh',width:'auto',objectFit:'contain',objectPosition:'bottom',
+              filter:`drop-shadow(0 0 40px ${R}44)`,opacity:0.35}}/>
+          <div style={{position:'absolute',inset:0,background:`linear-gradient(to bottom, ${B}EE 0%, ${B}88 40%, ${B}AA 70%, ${B}FF 100%)`}}/>
+          <div style={{position:'absolute',inset:0,background:`radial-gradient(ellipse 80% 60% at 60% 50%, ${DR}22 0%, transparent 70%)`}}/>
+        </div>
+
+        {/* Content — scrollable column */}
+        <div className="relative z-10 flex flex-col px-5 pt-6 pb-10 gap-5">
+
+          {/* Role + typewriter */}
+          <motion.div initial={{opacity:0,x:-16}} animate={{opacity:1,x:0}} transition={{delay:0.1}} className="flex flex-col gap-1.5">
+            <div className="flex items-center gap-2">
+              <div style={{width:20,height:20,border:`2px solid ${R}`,display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <div style={{width:10,height:10,background:R,transform:'rotate(45deg)'}}/>
+              </div>
+              <span style={{fontFamily:'var(--font-mono)',fontSize:13,color:W,letterSpacing:'0.25em'}}>DUELIST</span>
+            </div>
+            <div className="flex items-center gap-1 ml-7">
+              <span style={{fontFamily:'var(--font-mono)',fontSize:11,color:R,letterSpacing:'0.15em'}}>{typed}</span>
+              <motion.span animate={{opacity:[1,0,1]}} transition={{duration:0.7,repeat:Infinity}}
+                style={{fontFamily:'var(--font-mono)',fontSize:11,color:R}}>_</motion.span>
+            </div>
+          </motion.div>
+
+          {/* Big name */}
+          <motion.div initial={{opacity:0,y:20}} animate={{opacity:1,y:0}} transition={{duration:0.7,delay:0.2}}>
+            <RGBSplit intensity={3}>
+              <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(56px,16vw,80px)',
+                color:W,lineHeight:0.88,letterSpacing:'0.02em',textShadow:`3px 0 ${R}55`}}>
+                VISHWESH
+              </div>
+            </RGBSplit>
+            <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(12px,4vw,18px)',
+              color:'transparent',WebkitTextStroke:`1px ${W}28`,letterSpacing:'0.18em',marginTop:4}}>
+              MASHRUWALA
+            </div>
+            <div style={{height:2,background:R,width:120,margin:'12px 0'}}/>
+            <p style={{fontFamily:'var(--font-body)',fontSize:16,color:DIM,lineHeight:1.7,maxWidth:300}}>
+              CS grad. Creative dev. Ships code and art from Surat, India.
+            </p>
+          </motion.div>
+
+          {/* CTA buttons */}
+          <motion.div initial={{opacity:0}} animate={{opacity:1}} transition={{delay:0.5}} className="flex gap-3">
+            <a href={`mailto:${EMAIL}`}
+              style={{fontFamily:'var(--font-mono)',fontSize:12,letterSpacing:'0.18em',padding:'10px 20px',
+                background:R,color:B,clipPath:'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)',
+                textDecoration:'none',display:'inline-block'}}>HIRE ME</a>
+            <a href="https://github.com/vishwesh-mashruwala" target="_blank" rel="noopener noreferrer"
+              style={{fontFamily:'var(--font-mono)',fontSize:12,letterSpacing:'0.18em',padding:'10px 20px',
+                color:DIM,border:`1px solid rgba(255,255,255,0.22)`,
+                clipPath:'polygon(8px 0%,100% 0%,calc(100% - 8px) 100%,0% 100%)',
+                textDecoration:'none',display:'inline-block'}}>GITHUB</a>
+          </motion.div>
+
+          {/* Rank card */}
+          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.6}}>
+            <RankCard/>
+          </motion.div>
+
+          {/* Abilities */}
+          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.7}} className="flex flex-col gap-2">
+            <span style={{fontFamily:'var(--font-mono)',fontSize:10,color:R,letterSpacing:'0.25em'}}>ABILITIES</span>
+            <div className="flex gap-2">
+              <AbilityCross active={ab} setActive={setAb}/>
+            </div>
+            <AbilityCallout ab={activeAb}/>
+          </motion.div>
+
+          {/* Minimap + Now Playing side by side */}
+          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.8}} className="flex gap-3">
+            <Minimap/>
+            <NowPlaying/>
+          </motion.div>
+
+          {/* Loadout full width */}
+          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:0.9}}>
+            <LoadoutWidget/>
+          </motion.div>
+
+          {/* Terminal */}
+          <motion.div initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:1.0}}>
+            <Terminal/>
+          </motion.div>
+        </div>
+      </div>
+    )
+  }
+
+  // ── DESKTOP LAYOUT (unchanged) ─────────────────────────────────────────────
   return(
     <div className="relative w-full h-full overflow-hidden">
-      {/* Ghost bg name */}
       <motion.div style={{x:bgX,y:bgY}} className="absolute inset-0 flex items-center justify-center pointer-events-none select-none overflow-hidden">
         <div style={{fontFamily:'var(--font-display)',fontSize:'clamp(100px,18vw,220px)',color:'transparent',
           WebkitTextStroke:`1.5px ${R}18`,lineHeight:1,letterSpacing:'0.06em',userSelect:'none',whiteSpace:'nowrap'}}>
           VISHWESH
         </div>
       </motion.div>
-
-      {/* Role + typewriter */}
       <motion.div initial={{opacity:0,x:-16}} animate={{opacity:1,x:0}} transition={{delay:0.1}}
         className="absolute flex flex-col gap-2 z-20" style={{top:82,left:48}}>
         <div className="flex items-center gap-3">
@@ -617,8 +742,6 @@ function AgentPanel(){
         className="absolute z-20" style={{top:148,left:52,fontFamily:'var(--font-display)',fontSize:24,color:`${W}33`,letterSpacing:'0.1em'}}>
         01
       </motion.div>
-
-      {/* Name block */}
       <motion.div style={{x:wLX,y:wLY}} className="absolute z-20">
         <div className="absolute flex flex-col justify-end" style={{bottom:44,left:48,maxWidth:360}}>
           <motion.div initial={{opacity:0,y:28}} animate={{opacity:1,y:0}} transition={{duration:0.8,delay:0.1,ease:[0.16,1,0.3,1]}}>
@@ -656,8 +779,6 @@ function AgentPanel(){
           </motion.div>
         </div>
       </motion.div>
-
-      {/* Art */}
       <div className="absolute inset-0 flex items-end justify-center z-10 pointer-events-none">
         <motion.div style={{x:artX,y:artY}} initial={{opacity:0,y:40,scale:1.08}} animate={{opacity:1,y:0,scale:1}}
           transition={{duration:1.2,ease:[0.16,1,0.3,1]}}>
@@ -678,8 +799,6 @@ function AgentPanel(){
           </div>
         </motion.div>
       </div>
-
-      {/* Right — terminal + abilities */}
       <motion.div style={{x:wRX,y:wRY}} className="absolute z-20">
         <div className="absolute" style={{top:78,right:44}}><Terminal/></div>
       </motion.div>
@@ -687,19 +806,10 @@ function AgentPanel(){
         <AbilityCross active={ab} setActive={setAb}/>
         <AbilityCallout ab={activeAb}/>
       </div>
-
-      {/* Left mid — rank */}
       <div className="absolute z-20" style={{top:'50%',left:44,transform:'translateY(-50%)'}}><RankCard/></div>
-
-      {/* Bottom — ALL THREE: minimap + now playing + loadout */}
-<div className="absolute z-20 flex gap-3 items-end"
-  style={{ bottom: 36, left: '50%', transform: 'translateX(-50%)' }}>
-  <Minimap/>
-  <NowPlaying/>
-  <LoadoutWidget/>
-</div>
-
-      {/* HUD dots */}
+      <div className="absolute z-20 flex gap-3 items-end" style={{bottom:36,left:'50%',transform:'translateX(-50%)'}}>
+        <Minimap/><NowPlaying/><LoadoutWidget/>
+      </div>
       {[{l:'3.5%',t:'28%'},{l:'3.5%',t:'60%'},{l:'3.5%',t:'82%'},{r:'2.8%',t:'32%'},{r:'2.8%',t:'62%'},{r:'2.8%',t:'85%'}].map((d,i)=>(
         <div key={i} className="absolute" style={{left:(d as any).l,right:(d as any).r,top:d.t,width:6,height:6,background:R,opacity:0.45}}/>
       ))}

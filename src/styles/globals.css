@@ -20,6 +20,10 @@ body {
   overflow: hidden;
   cursor: none;
 }
+@media (max-width: 767px) {
+  body { overflow-y: auto; cursor: auto; }
+  .cursor, .cursor-ring { display: none; }
+}
 
 /* Diamond cursor */
 .cursor {
