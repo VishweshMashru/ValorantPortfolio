@@ -165,11 +165,11 @@ If you're a developer in a Tier 2 city feeling like you're missing out — you m
 ]
 
 const LORE = [
-  `Born in Surat, Gujarat — a city of diamonds, textiles, and relentless commerce. Mashruwala grew up watching his father thread patterns into fabric with machine precision. He learned early that design is just engineering with better aesthetics.`,
-  `Recruited by VALORANT Protocol after demonstrating anomalous full-stack deployment capabilities during a freelance contract that should have taken three sprints. He shipped in four days. Investigators found evidence of extreme focus, three empty cups of chai, and a git history with exactly one commit message: "done."`,
-  `His signature ability, EMBROID, remains classified. Operatives report it involves weaving logic directly into physical matter — whether this is metaphor or literal remains under investigation.`,
-  `When not on contract, Mashruwala studies 3D art, plays basketball at unreasonable hours, and listens to hip-hop at volumes that concern his neighbors. Terminal history contains more anime references than mission logs.`,
-  `Current threat level: RADIANT. Current status: available for hire.`,
+  `Vishwesh Mashruwala. 23. CS grad from San Jose State, December 2025. Currently back in Surat helping run the family embroidery business while building my own thing on the side.`,
+  `I write code, break things, fix things. Full-stack mostly — Next.js, React, TypeScript. Also been getting into Unity and Blender. Game dev is the long-term thing.`,
+  `The embroidery work is genuinely interesting actually. Running inventory systems for it, learning how physical manufacturing works. It's just engineering with thread.`,
+  `Into hip-hop, basketball, lofi, anime. Pixel art occasionally. I like things that are made with taste, whatever the medium.`,
+  `Not looking to relocate right now. Available for freelance. Respond fast, ship faster.`,
 ]
 
 const GALLERY = [
@@ -1102,7 +1102,7 @@ function ContactPanel(){
             <p style={{fontFamily:'var(--font-body)',fontSize:18,color:DIM,marginTop:16,lineHeight:1.7}}>Freelance projects, collabs, interesting problems.<br/>Async-friendly. Fast turnaround.</p>
           </motion.div>
           <div className="flex flex-col gap-2 mt-8">
-            {[{l:'EMAIL',v:EMAIL,h:`mailto:${EMAIL}`},{l:'PHONE',v:PHONE,h:`tel:+919537517519`},{l:'GITHUB',v:'github.com/vishwesh-mashruwala',h:'https://github.com/vishwesh-mashruwala'}].map((lnk,i)=>(
+            {[{l:'EMAIL',v:EMAIL,h:`mailto:${EMAIL}`},{l:'PHONE',v:PHONE,h:`tel:+919537517519`},{l:'GITHUB',v:'https://github.com/VishweshMashru',h:'https://github.com/VishweshMashru'}].map((lnk,i)=>(
               <motion.a key={lnk.l} href={lnk.h} target="_blank" rel="noopener noreferrer"
                 initial={{opacity:0,x:-20}} animate={{opacity:1,x:0}} transition={{delay:i*0.08+0.3}}
                 className="flex items-center gap-4 py-3.5 px-5 transition-all duration-200"
