@@ -3,10 +3,10 @@ import { useRef, useState } from 'react'
 import { motion, useInView } from 'framer-motion'
 
 const links = [
-  { label: 'GITHUB', href: 'https://github.com/vishwesh-mashruwala', icon: '⌥', desc: 'CODE ARCHIVE' },
-  { label: 'LINKEDIN', href: 'https://linkedin.com/in/vishwesh-mashruwala', icon: '⊡', desc: 'PROFESSIONAL DOSSIER' },
+  { label: 'GITHUB', href: 'https://github.com/VishweshMashru', icon: '⌥', desc: 'CODE ARCHIVE' },
+  { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/vishwesh-mashruwala-00a53122a/', icon: '⊡', desc: 'PROFESSIONAL DOSSIER' },
   { label: 'EMAIL', href: 'mailto:hello@vishwesh.dev', icon: '✉', desc: 'DIRECT COMMS' },
-  { label: 'LYBYTEX', href: 'https://lybytex.com', icon: '◈', desc: 'LIVE DEPLOYMENT' },
+  { label: 'Code&Cloth', href: '-REDACTED-', icon: '◈', desc: 'UNKNOWN' },
 ]
 
 export default function ContactSection() {
@@ -172,7 +172,7 @@ export default function ContactSection() {
       <div className="mt-24 border-t border-white/5">
         <div className="max-w-7xl mx-auto px-6 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <span className="mono-text text-[10px] text-white/20">
-            © 2025 VISHWESH MASHRUWALA // BUILT IN AHMEDABAD
+            © 2026 VISHWESH MASHRUWALA // BUILT IN Surat
           </span>
           <span className="mono-text text-[10px] text-white/15">
             NEXT.JS // THREE.JS // FRAMER MOTION // TAILWIND
